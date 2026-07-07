@@ -16,5 +16,6 @@ Ensure you have **Docker** and **WSL** (for Windows users) installed.
 
 ### 2. Configure Environment (.env)
 Create a `.env` file in the root project folder and define your API key and Url:
-```env GOLD_API_KEY=my-super-secret-key-123
+```env
+GOLD_API_KEY=my-super-secret-key-123
 URL_GOLD=https://www.ทองคําราคา.com/

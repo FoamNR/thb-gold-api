@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os" // 🎯 นำเข้า os
 	"time"
-	"os"
 
 	"gold-scraper/internal/auth"
 	"gold-scraper/internal/cache"
@@ -15,11 +15,9 @@ import (
 )
 
 func main() {
-	// 1. สร้าง Cache และโครงสร้างความปลอดภัย
 	goldCache := cache.NewMemoryCache()
 	ipLimiter := limiter.NewIPLimiter()
 
-	// 2. 🚀 Start Background Worker (ดึงราคาทองทุกๆ 5 นาทีเก็บเข้าแคช)
 	go func() {
 		for {
 			log.Println("[Worker] กำลังไปดึงข้อมูลราคาทองคำจากเว็บภายนอก...")
@@ -28,14 +26,13 @@ func main() {
 				log.Printf("[Worker Error] ดึงข้อมูลไม่สำเร็จ: %v", err)
 			} else {
 				jsonData, _ := json.Marshal(data)
-				goldCache.Set(jsonData) // เก็บลงแคช
+				goldCache.Set(jsonData)
 				log.Println("[Worker] อัปเดตข้อมูลแคชล่าสุดเรียบร้อย")
 			}
-			time.Sleep(5 * time.Minute) // พัก 5 นาทีค่อยไปดึงใหม่
+			time.Sleep(5 * time.Minute)
 		}
 	}()
 
-	// 3. สร้าง Handler สำหรับส่งข้อมูลแคชกลับไปให้ User
 	goldHandler := func(w http.ResponseWriter, r *http.Request) {
 		cachedData := goldCache.Get()
 		if cachedData == nil {
@@ -46,17 +43,20 @@ func main() {
 		w.Write(cachedData)
 	}
 
-	// 4. 🛡️ ผูกระบบความปลอดภัย (Rate Limit -> API Key -> ดึงทองจาก Cache)
 	secureHandler := limiter.RateLimitMiddleware(ipLimiter, auth.ApiKeyMiddleware(goldHandler))
 	http.HandleFunc("/api/gold", secureHandler)
 
+	// 🎯 🎯 🎯 จุดสำคัญ: ตรวจสอบให้มั่นใจว่าโค้ดช่วงนี้ถูกเขียนแบบนี้ เพื่อดึง 'os' มาใช้งานจริง
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
 	fmt.Println("--------------------------------------------------")
-	fmt.Println("🌟 API ราคาทองคำระบบ Production (Best Practice) เริ่มทำงาน")
-	fmt.Println("🔗 URL: http://localhost:8080/api/gold")
-	fmt.Println("🔒 ปลอดภัยด้วยระบบ แคชข้อมูล + กันบอทยิงถล่ม + API Key")
+	fmt.Printf("🚀 API Server กำลังทำงานบนพอร์ต %s...\n", port)
 	fmt.Println("--------------------------------------------------")
 
-	if err := http.ListenAndServe(":8080", nil); err != nil {
+	if err := http.ListenAndServe(":"+port, nil); err != nil {
 		log.Fatal(err)
 	}
 }

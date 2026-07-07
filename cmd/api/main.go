@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"time"
+	"os"
 
 	"gold-scraper/internal/auth"
 	"gold-scraper/internal/cache"

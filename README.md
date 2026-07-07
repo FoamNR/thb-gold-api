@@ -12,7 +12,7 @@ A clean and secure Web Scraping API built with Go to fetch real-time gold prices
 ## 🚀 Installation & Setup
 
 ### 1. Prerequisites
-Ensure you have **Docker** and **WSL** (for Windows users) installed.
+Ensure you have **Docker** installed.
 
 ### 2. Configure Environment (.env)
 Create a `.env` file in the root project folder and define your API key and Url:

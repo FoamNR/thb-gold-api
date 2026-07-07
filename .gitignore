@@ -1,0 +1,29 @@
+# 🔑 SECURITY: ห้ามนำไฟล์เก็บข้อมูลความลับหรือคีย์ถอดรหัสขึ้น GitHub เด็ดขาด
+.env
+*.env
+.env.*
+
+# 📦 Dependency / แพ็กเกจที่โหลดมา (Docker และ Go Tooling จะจัดการเอง)
+/vendor/
+
+# 🔨 คอมไพล์ไฟล์สคริปต์ / ไฟล์รันที่ได้จากการ Build ในเครื่องตนเอง
+gold-scraper
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# 📂 โฟลเดอร์ขยะและ Cache ของระบบเครื่องมือพัฒนา (IDE / Editor)
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+*~
+
+# 🐋 Docker log และไฟล์ขยะชั่วคราว
+.dockerignore
+*.log
